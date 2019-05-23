@@ -63,9 +63,18 @@ class Sunburst extends Component {
             .enter().append("path")
             .attr('stroke' , 'lightcoral')
             .attr('stroke-width', '0.5px')
-            .attr('fill', d => d.data.name === 'i' ? 'red' : 'grey' )
+            .attr('fill', 'grey' )
             // .attr("fill", d => { while (d.depth > 1) d = d.parent; return color(d.data.name); })
             .attr("d", arc)
+            .on('mouseover', function (d, i, nodes) {
+                d3.select(nodes[i])
+                .attr('fill', 'blue')
+            })
+            .on('mouseout', function (d, i, nodes) {
+                d3.select(nodes[i])
+                .attr('fill', 'grey')
+            })
+
             .append("title")
             .text(d => `${d.ancestors().map(d => d.data.name).reverse().join("/")}\n${format(d.value)}`);
 
@@ -102,3 +111,29 @@ class Sunburst extends Component {
 }
 
 export default Sunburst;
+
+
+// const params = {
+//     one: {
+//         innerRadius: 10,
+//         outerRadius: 20,
+//     },
+//     two: {
+//         innerRadius: 20,
+//         outerRadius: 30
+//     },
+//     three: {
+//         innerRadius: 30,
+//         outerRadius: 40
+//     }
+// }
+
+// renderData('one')
+// renderData('two')
+// renderData('three')
+
+// renderData (number) {
+//     arc
+//     .innerRadius(d => params[number].innerRadius)
+//     .outerRadius(d => params[number].outerRadius)
+// }
