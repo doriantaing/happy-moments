@@ -16,16 +16,16 @@ class Sunburst extends Component {
             isLoading: false
         });
         this.renderData(subjects);
-        this.renderData(subjects);
+        this.renderData(subjects, true);
     }
 
-    async renderData(getData , ...args){
+    async renderData(getData, o){
         // CONSTANT
-        const data = await getData(...args)
+        const data = await getData()
         const color = d3.scaleOrdinal(d3.quantize(d3.interpolateRainbow, data.children.length + 1))
         const format = d3.format(",d")
-        const width = 200
-        const radius = width / 2
+        const size = 200
+        const radius = size / 2
         function autosize(svg) {
             document.querySelector('.sunburst').appendChild(svg);
             const box = svg.getBBox();
@@ -43,18 +43,20 @@ class Sunburst extends Component {
         const arc = d3.arc()
             .startAngle(d => d.x0)
             .endAngle(d => d.x1)
-            .padAngle(d => Math.min((d.x1 - d.x0) / 2, 0.005))
-            .padRadius(radius / 2)
-            .innerRadius(d => d.y0)
-            .outerRadius(d => d.y1 - 1)
+            // .padAngle(d => Math.min((d.x1 - d.x0) / 2, 0.005))
+            // .padRadius(radius / 2)
+            .innerRadius(o ? 100 : 150)
+            .outerRadius(o ? 150 : 200)
 
         const root = partition(data);
 
         const svg = d3.select('.sunburst').append('svg')
-            .style("width", 400)
-            .style("height", 400)
+            .style("width", o ? 150 : 200)
+            .style("height", o ? 150 : 200)
             // .style("padding", "10px")
             .style("font", "8px sans-serif")
+            .style('transform', o && 'translate(25px, 25px)')
+            .style('background', 'rgba(0, 0, 0, 0.1)')
             // .style("box-sizing", "border-box");
         svg.append("g")
             .attr("fill-opacity", .5)
@@ -89,7 +91,7 @@ class Sunburst extends Component {
                     return
                 }
                 const x = (d.x0 + d.x1) / 2 * 180 / Math.PI;
-                const y = d.depth < 3 ? (d.y0 + d.y1) / 2 : d.y1 + 1;
+                const y = o ? (100 + 150) / 2 : (150 + 200) / 2
                 return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
             })
             .attr("dy", "0.35em")
