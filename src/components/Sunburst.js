@@ -1,6 +1,7 @@
 import React , {Component} from 'react';
 import * as d3 from 'd3';
 import {merged , subjects} from '../helpers/dataFile';
+import Complete from './Complete.js'
 
 class Sunburst extends Component {
     state = {
@@ -121,6 +122,7 @@ class Sunburst extends Component {
                 <h3>Loading ...</h3>
                 }
                 <div className="sunburst"></div>
+                <Complete/>
             </div>
         )
     }

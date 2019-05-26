@@ -1,13 +1,11 @@
 import React from 'react';
 import './assets/style/style.scss';
-import Sunburst2 from './components/Sunburst2';
-import Sunburst from './components/Sunburst';
+import AppRouter from './Router/AppRouter';
 
 const App = () => {
   return (
     <div className="App">
-      <Sunburst2/>
-      {/* <Sunburst/> */}
+      <AppRouter/>
     </div>
   );
 }

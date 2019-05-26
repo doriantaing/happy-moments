@@ -1,14 +1,9 @@
-.bar{
-    height: 100px;
-    width: 20px;
-    background: wheat;
-    display: inline-block;
-    margin-right: 10px;
-}
+// COMMON
+@import './common/fonts';
+@import './common/colors';
+@import './common/generals';
+@import './common/helpers';
 
-.sunburst {
-    width: 25%;
-    svg {
-        position: absolute;
-    }
-}
+// VIEWS
+@import './views/home';
+@import './views/about';

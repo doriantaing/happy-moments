@@ -1,0 +1,60 @@
+$red: #ff8378;
+$blue: #62c4d6;
+$purple: #855cd6;
+$grey: #737373;
+
+$spaces:10, 20, 30, 40, 50, 130;
+$sides: (top, bottom, left, right);
+
+@each $space in $spaces {
+    @each $side in $sides {
+        .m#{str-slice($side, 0, 1)}-#{$space} {
+        margin-#{$side}: #{$space}px !important;
+        }
+    
+        .p#{str-slice($side, 0, 1)}-#{$space} {
+        padding-#{$side}: #{$space}px !important;
+        }
+    }
+}
+
+a{
+    text-decoration: none;
+    color: inherit;
+}
+.container{
+    max-width: 1400px !important;
+    width: auto !important;
+    margin: auto;
+}
+.ta-c{
+    text-align: center;
+}
+.jc-end{
+    justify-content: flex-end;
+}
+.ai-end{
+    align-items: flex-end;
+}
+.jc-between{
+    justify-content: space-between;
+}
+.text-xxl{
+    font-size: 58px;
+}
+.text-xl{
+    font-size: 46px;
+}
+.text-lg{
+    font-size: 28px;
+}
+.text-md{
+    font-size: 18px;
+}
+.text-sm{
+    font-size: 14px;
+    line-height: 1.79em;
+}
+.c-grey{
+    color: $grey;
+}
