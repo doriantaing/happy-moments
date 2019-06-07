@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
 import '../../assets/style/flexboxgrid.min.css';
 import {Link} from 'react-router-dom';
+import {sources} from '../../assets/img/index';
 
 class Home extends Component {
+  state = {
+    icons: [ 'icon-sofa','icon-popcorn','icon-octopus','icon-cat','icon-popcorn','icon-donut','icon-chocolate'],
+  };
+
   render() {
+    const {icons} = this.state;
     return (
         <div className="Home">
             <div className="container">
@@ -26,9 +32,9 @@ class Home extends Component {
             |
             */}
             <div className="img-container">
-                <img src={process.env.PUBLIC_URL + '/img/gradient-1.svg'} id="__id__" className="home-gradient" alt=""/>
-                <img src={process.env.PUBLIC_URL + '/img/gradient-2.svg'} id="__id__" className="home-gradient" alt=""/>
-                <img src={process.env.PUBLIC_URL + '/img/gradient-img.svg'} id="__id__" className="home-gradient" alt=""/>
+                <img src={sources.gradient1} id="__id__" className="home-gradient" alt=""/>
+                <img src={sources.gradient2} id="__id__" className="home-gradient" alt=""/>
+                <img src={sources.gradientImg} id="__id__" className="home-gradient" alt=""/>
             </div>
 
 
@@ -37,13 +43,11 @@ class Home extends Component {
             |-- Icons 
             |
             */}
-            <img src={process.env.PUBLIC_URL + '/img/icons/sofa.svg'} id="__id__" className="home-icon icon-1" alt=""/>
-            <img src={process.env.PUBLIC_URL + '/img/icons/popcorn.svg'} id="__id__" className="home-icon icon-2" alt=""/>
-            <img src={process.env.PUBLIC_URL + '/img/icons/octopus.svg'} id="__id__" className="home-icon icon-3" alt=""/>
-            <img src={process.env.PUBLIC_URL + '/img/icons/cat.svg'} id="__id__" className="home-icon icon-4" alt=""/>
-            <img src={process.env.PUBLIC_URL + '/img/icons/popcorn.svg'} id="__id__" className="home-icon icon-5" alt=""/>
-            <img src={process.env.PUBLIC_URL + '/img/icons/donut.svg'} id="__id__" className="home-icon icon-6" alt=""/>
-            <img src={process.env.PUBLIC_URL + '/img/icons/chocolate.svg'} id="__id__" className="home-icon icon-7" alt=""/>
+            { icons.map((el, i) => {
+                return(
+                    <i className={`home-icon icon-${i + 1} ${el}`} id="__id__" key={i}/>
+                )
+            })}
         </div>
     );
   }

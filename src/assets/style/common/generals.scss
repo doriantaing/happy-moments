@@ -1,7 +1,22 @@
 .sunburst {
     width: 25%;
     svg {
-        position: absolute;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      path{
+        &.active{
+          fill: $red;
+        }
+      }
+    }
+    .sunburst-desc{
+      fill: $red;
+      font-size: 28px;
+      tspan:last-child{
+        fill: $black;
+        font-size: 20px;
+      }
     }
 }
 
@@ -23,6 +38,7 @@ body{
     font-family: 'futura';
     padding: 0;
     margin: 0;
+  overflow: hidden;
 }
 .home-icon{
     position: absolute;
@@ -42,13 +58,26 @@ body{
    display: inline-block;
    position: relative;
    text-transform: uppercase;
+
    &:after{ 
-       content: url('../img/triangle.svg');
+       content: '\e906';
+       font-family: 'icomoon';
+       color: $black;
+       font-size: 10px;
        position: absolute;
        right: 0;
-        bottom: 0;
-        height: 8px;
-        width: 8px;
-        transform: translate(90%, -50%);
+       bottom: -8px;
+       height: 8px;
+       width: 8px;
+       transform: translate(90%, -50%);
    }
+  &--back{
+    padding: 0 0 5px 20px;
+    &::after{
+      right: inherit;
+      left: 0;
+      bottom: -9px;
+      transform: translate(0, -50%) rotate(180deg);
+    }
+  }
 }

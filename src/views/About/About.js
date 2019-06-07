@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
+import {sources} from '../../assets/img/index';
 
 class About extends Component {
+   state = {
+       icons: [ 'icon-sofa','icon-popcorn','icon-octopus','icon-cat','icon-popcorn','icon-donut','icon-chocolate'],
+   };
+
   render() {
+    const {icons} = this.state;
+
     return (
         <div className="About">
             <section className="container">
@@ -38,20 +45,18 @@ class About extends Component {
                 </div>
             </section>
 
-            <img src={process.env.PUBLIC_URL + '/img/gradient-3.svg'} id="__id__" className="about-gradient" alt=""/>
+            <img src={sources.gradient3} id="__id__" className="about-gradient" alt=""/>
 
             {/*
             |
             |-- Icons 
             |
             */}
-            <img src={process.env.PUBLIC_URL + '/img/icons/sofa.svg'} id="__id__" className="home-icon icon-1" alt=""/>
-            <img src={process.env.PUBLIC_URL + '/img/icons/popcorn.svg'} id="__id__" className="home-icon icon-2" alt=""/>
-            <img src={process.env.PUBLIC_URL + '/img/icons/octopus.svg'} id="__id__" className="home-icon icon-3" alt=""/>
-            <img src={process.env.PUBLIC_URL + '/img/icons/cat.svg'} id="__id__" className="home-icon icon-4" alt=""/>
-            <img src={process.env.PUBLIC_URL + '/img/icons/popcorn.svg'} id="__id__" className="home-icon icon-5" alt=""/>
-            <img src={process.env.PUBLIC_URL + '/img/icons/donut.svg'} id="__id__" className="home-icon icon-6" alt=""/>
-            <img src={process.env.PUBLIC_URL + '/img/icons/chocolate.svg'} id="__id__" className="home-icon icon-7" alt=""/>
+            {icons.map((el, i) => {
+                return(
+                    <i className={`home-icon icon-${i + 1} ${el}`} id="__id__" key={i}/>
+                )
+            })}
         </div>
     );
   }
