@@ -1,0 +1,14 @@
+.graph{
+  .graph-gradient{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    width: 100vw;
+  }
+  .btn--back{
+    position: absolute;
+    right: 83px;
+    top: 71px;
+  }
+}
