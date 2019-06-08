@@ -28,7 +28,10 @@ const Sunburst2 = () => {
     const [isLoading, statusLoading] = useState(true);
     const [selectedSubject , changeSubject] = useState('');
     const [selectedVerb , changeVerb] = useState('');
+    const [selectedObject, changeObject] = useState('')
     let subjectActive, verbActive, objectActive;
+
+    const [sentences, setSentences] = useState([])
           
 
     useEffect(() => {
@@ -54,8 +57,20 @@ const Sunburst2 = () => {
 
     useEffect(() => {
         const g = d3.select("g")
+        changeObject('')
         renderGraph(g, 2);
     }, [selectedVerb])
+
+    useEffect(() => {
+        if (!selectedObject) {
+            return setSentences([])
+        }
+        (async () => {
+            const res = await fetch(`http://localhost:5000/?subject=${selectedSubject}&verb=${selectedVerb}&object=${selectedObject}`)
+            const { data } = await res.json()
+            setSentences(data[0].array_agg)
+        })()
+    }, [selectedObject])
 
     const renderGraph = (g, i) => {
         if (!data) return
@@ -102,6 +117,9 @@ const Sunburst2 = () => {
                         }
                         if (i === 1) {
                             changeVerb(verb);
+                        }
+                        if (i === 2) {
+                            changeObject(object)
                         }
 
                         
@@ -170,9 +188,15 @@ const Sunburst2 = () => {
         return(
             <h3>Loading ...</h3>
         )
-    }    
+    }
     return(
         <div>
+            <ul style={{ position: 'absolute' }}>
+                {sentences.map(sentence =>
+                    <li>{sentence}</li>
+                )}
+                {/* {sentences.sort(() => 0.5 - Math.random())[0]} */}
+            </ul>
             <div className="sunburst">
                 <svg width={800} height={800}>
                     <g>
