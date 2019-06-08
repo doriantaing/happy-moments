@@ -48,15 +48,18 @@ const Sunburst2 = () => {
 
     useEffect(() => {
         const g = d3.select("g")
-        if (selectedSubject) renderGraph(g, 1);
+        changeVerb('') // when subject is changed reset selected verb
+        renderGraph(g, 1);
     }, [selectedSubject])
 
     useEffect(() => {
         const g = d3.select("g")
-        if (selectedVerb) renderGraph(g, 2);
+        renderGraph(g, 2);
     }, [selectedVerb])
 
     const renderGraph = (g, i) => {
+        if (!data) return
+
         const groupChart = g.select(`#${configChart[i].key}`);
         const arcGenerator = d3.arc()
             .innerRadius(configChart[i].innerRadius)
@@ -66,18 +69,23 @@ const Sunburst2 = () => {
         const arcData = d3.pie()
             .value(d => d.count)
             (data[i].filter(({subject, verb , object}) => {
-                if(verb && !object){
+                if (i === 0) {
+                    return true
+                }
+                if (i === 1) {
                     return subject === selectedSubject
-                } else if(verb && object){
+                }
+                if (i === 2) {
                     return subject === selectedSubject && verb === selectedVerb
                 }
-                return true;
             }))
 
         const paths = groupChart.select("g:nth-child(1)")
                     .selectAll('path')
                     .data(arcData)
                 
+            paths.exit().remove() // remove arc when not needed
+
             paths.enter()
                 .append("path")
                     .merge(paths)
@@ -89,9 +97,15 @@ const Sunburst2 = () => {
                         const {subject , verb, object , count} = d.data;
 
                         // Update value of selected subject and verb
-                        i === 0 && changeSubject(subject);
-                        i === 1 && changeVerb(verb);
+                        if (i === 0) {
+                            changeSubject(subject);
+                        }
+                        if (i === 1) {
+                            changeVerb(verb);
+                        }
+
                         
+                        nodes.forEach(node => node.classList.remove('active')) // reset the previous one
                         subjectActive && d3.select(`#${subjectActive}`).attr('class', '');
                         d3.select(nodes[index]).attr('class' , 'active');
 
@@ -100,7 +114,8 @@ const Sunburst2 = () => {
                         }
 
                         // Update text of middle circle
-                        d3.select('#middle text > tspan:nth-child(1)').text(object ? object : verb ? verb : subject)
+                        const middleText = [subject, verb, object][i]
+                        d3.select('#middle text > tspan:nth-child(1)').text(middleText)
                         d3.select('#middle text > tspan:nth-child(2)').text(`x${count}`)
                     })
                     .on('mouseover', (d, i , nodes) => {
@@ -113,6 +128,8 @@ const Sunburst2 = () => {
         const texts = groupChart.select("g:nth-child(2)")
                     .selectAll("text")
                     .data(arcData)
+
+                texts.exit().remove()
 
                 texts.enter().append("text")
                     .merge(texts)
