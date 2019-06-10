@@ -2,10 +2,12 @@
 @import './common/fonts';
 @import './common/colors';
 @import './common/icons';
-@import './common/generals';
+@import './common/mixins';
 @import './common/helpers';
+@import './common/generals';
 
 // VIEWS
+@import './views/loader';
 @import './views/home';
 @import './views/about';
 @import './views/graph';

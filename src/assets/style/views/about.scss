@@ -7,6 +7,10 @@
         z-index: -1;
     }
     .boxes{
+        .number{
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
         .box{
             position: relative;
             height: 250px;
@@ -16,6 +20,11 @@
             padding: 20px;
             overflow: hidden;
         }
+        .col-md-4{
+            &:nth-child(odd){
+                margin-top: 20px;
+            }
+        }
         .box{
             &:after{
                 content: "";
@@ -24,9 +33,6 @@
                 position: absolute;
                 bottom: 0;
                 left: 0;
-            }
-            &:nth-child(odd){
-                margin-top: 20px;
             }
         }
         .box-red{

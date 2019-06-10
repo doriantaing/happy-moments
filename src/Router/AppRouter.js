@@ -7,13 +7,13 @@ import About from '../views/About/About';
 import Graph from '../views/Graph/Graph';
 import page404 from '../views/page404';
 
-const AppRouter = () => {
+const AppRouter = ({graphData}) => {
     return(
         <Router>
             <Switch>
                 <Route path="/" exact component={Home}/>
                 <Route path="/about" component={About}/>
-                <Route path="/graph" component={Graph}/>
+                <Route path="/graph" render={() => <Graph data={graphData}/>} />
                 <Route component={page404}/>
             </Switch>
         </Router>

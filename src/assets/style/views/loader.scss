@@ -1,0 +1,66 @@
+.loader{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background: linear-gradient(rgba($blue, 0.5), rgba($purple, 0.5));
+  &-title{
+    text-transform: uppercase;
+    color: $red;
+    font-size: 20px;
+    letter-spacing: 1.5px;
+    h3{
+      margin: 0;
+    }
+  }
+  .progress-bar{
+    background: $white;
+    border-radius: 20px;
+    width: 300px;
+    height: 20px;
+    margin: 50px 0 10px;
+    overflow: hidden;
+    &_fill{
+      display: block;
+      border-radius: 20px;
+      width: 0;
+      height: 20px;
+      background: $red;
+      transition: 1.5s;
+    }
+  }
+  &-anim{
+    width: 112px;
+    height: 112px;
+    .circle{
+      border: 16px solid $black;
+      box-sizing: border-box;
+      position: absolute;
+      display: block;
+      border-radius: 24px;
+      &.first{
+        width: 112px;
+        height: 48px;
+        margin-top: 64px;
+        margin-left: 0;
+        animation: animeFirstCircle 3s forwards $loaderEasing infinite;
+      }
+      &.second{
+        width: 48px;
+        height: 48px;
+        margin-top: 0px;
+        margin-left: 0px;
+        animation: animeSecondCircle 3s forwards $loaderEasing infinite;
+      }
+      &.third{
+        width: 48px;
+        height: 48px;
+        margin-top: 0px;
+        margin-left: 64px;
+        animation: animeThirdCircle 3s forwards $loaderEasing infinite;
+      }
+    }
+  }
+}

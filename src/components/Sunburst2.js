@@ -2,50 +2,42 @@ import React , {useState , useEffect} from 'react';
 import * as d3 from 'd3';
 /* import Complete from './Complete.js' */
 
-
 const configChart = [
     {
         innerRadius: 100,
         outerRadius: 150,
+        color: '#FFB9B0',
         key: 'subject'
     },
     {
         innerRadius: 170,
         outerRadius: 220,
+        color: '#99D4DF',
         key: 'verb'
     },
     {
         innerRadius: 240,
         outerRadius: 290,
+        color: '#A088CF',
         key: 'object'
     },
 ]
 
 
-let data;
-
-const Sunburst2 = () => {
-    const [isLoading, statusLoading] = useState(true);
+const Sunburst2 = ({data}) => {
+    // const [isLoading, statusLoading] = useState(true);
     const [selectedSubject , changeSubject] = useState('');
     const [selectedVerb , changeVerb] = useState('');
     const [selectedObject, changeObject] = useState('')
+    const [sentences, setSentences] = useState([])
+
     let subjectActive, verbActive, objectActive;
 
-    const [sentences, setSentences] = useState([])
-          
 
     useEffect(() => {
-        const fetchData = async() => {    
-            const res = await fetch('http://localhost:5000/all');
-            
-            ({data} = await res.json());
-            statusLoading(false);
-
-            const g = d3.select("g")
-                    .attr("transform", "translate(" + 800 / 2 + "," + 800 / 2 +")") 
-            renderGraph(g, 0);               
-        }
-        fetchData();
+        const g = d3.select("g")
+            .attr("transform", "translate(" + 600 / 2 + "," + 600 / 2 +")")
+        renderGraph(g, 0);
     }, [])
 
 
@@ -104,44 +96,56 @@ const Sunburst2 = () => {
             paths.enter()
                 .append("path")
                     .merge(paths)
-                    .attr("fill", '#FFB9B0')
-                    .attr('transition', '0.5s')
+                    .attr("fill", configChart[i].color)
                     .attr("id", d => configChart[i].key + d.index)
                     .attr("d", arcGenerator)
                     .on('click', (d, index, nodes) => {
                         const {subject , verb, object , count} = d.data;
+                        let textActive;
 
                         // Update value of selected subject and verb
                         if (i === 0) {
+                            textActive = 'subject';
                             changeSubject(subject);
                         }
                         if (i === 1) {
+                            textActive = 'verb';
                             changeVerb(verb);
                         }
                         if (i === 2) {
+                            textActive = 'object';
                             changeObject(object)
                         }
 
                         
-                        nodes.forEach(node => node.classList.remove('active')) // reset the previous one
-                        subjectActive && d3.select(`#${subjectActive}`).attr('class', '');
-                        d3.select(nodes[index]).attr('class' , 'active');
+                        nodes.forEach(node => node.classList.remove(`${textActive}-active`)) // reset the previous one
+
+                        d3.select(nodes[index]).attr('class' , `${textActive}-active`);
 
                         if(nodes[index].id.includes('subject')){
                             subjectActive = nodes[index].id;
                         }
 
                         // Update text of middle circle
-                        const middleText = [subject, verb, object][i]
+                        const middleText = [subject, verb, object][i];
                         d3.select('#middle text > tspan:nth-child(1)').text(middleText)
                         d3.select('#middle text > tspan:nth-child(2)').text(`x${count}`)
                     })
                     .on('mouseover', (d, i , nodes) => {
+                        const {verb , object} = d.data;
+                        const hoverColor = object ? '#855CD6' : verb ? '#65C6D7' : '#FF8378';
                         d3.select(nodes[i]).transition()
                         .attr('duration', 500)
-                        .attr('fill', '#FF8378')
+                        .attr('fill', hoverColor)
                     })
-                    .on('mouseout', (d, i, nodes) => d3.select(nodes[i]).transition().attr('fill', '#FFB9B0'))
+                    .on('mouseout', (d, i, nodes) => {
+                        const {verb , object} = d.data;
+                        const hoverColor = object ? '#A088CF' : verb ? '#99D4DF' : '#FFB9B0';
+
+                        d3.select(nodes[i]).transition()
+                         .attr('duration', 5000)
+                         .attr('fill', hoverColor)
+                    })
 
         const texts = groupChart.select("g:nth-child(2)")
                     .selectAll("text")
@@ -155,6 +159,7 @@ const Sunburst2 = () => {
                         const [ x, y ] = arcGenerator.centroid(d)
                         return `translate(${x},${y})`
                     })
+                    .attr('fill', '#FFFFFF')
                     .attr('pointer-events', 'none')
                     .text(({ startAngle, endAngle, data}) =>
                         endAngle - startAngle > 0.15 ? data[configChart[i].key] : '.'
@@ -183,12 +188,12 @@ const Sunburst2 = () => {
                 .text((d , i , nodes) => `x${d.data.count}`)
         }
     }
-
-    if(isLoading){
-        return(
-            <h3>Loading ...</h3>
-        )
-    }
+    //
+    // if(isLoading){
+    //     return(
+    //         <h3>Loading ...</h3>
+    //     )
+    // }
     return(
         <div>
             <ul style={{ position: 'absolute' }}>
@@ -198,7 +203,7 @@ const Sunburst2 = () => {
                 {/* {sentences.sort(() => 0.5 - Math.random())[0]} */}
             </ul>
             <div className="sunburst">
-                <svg width={800} height={800}>
+                <svg width={600} height={600}>
                     <g>
                         <g id="middle">
                             <circle/>
