@@ -1,5 +1,6 @@
 import React , {useState , useEffect} from 'react';
 import * as d3 from 'd3';
+import {AnnotationCalloutCircle} from 'react-annotation';
 /* import Complete from './Complete.js' */
 
 const configChart = [
@@ -21,15 +22,30 @@ const configChart = [
         color: '#A088CF',
         key: 'object'
     },
-]
+];
+
+const clickSentences = (el) => {
+    const sentenceId = el.currentTarget.className;
+
+    (async () => {
+        const res = await fetch(`http://localhost:5000/sentence=${sentenceId}`);
+        const {rows} = await res.json();
+        console.log(rows);
+    })()
+};
+
+const changeRange = (input) => {
+    const value = input.currentTarget.value;
+};
 
 
 const Sunburst2 = ({data}) => {
     // const [isLoading, statusLoading] = useState(true);
     const [selectedSubject , changeSubject] = useState('');
     const [selectedVerb , changeVerb] = useState('');
-    const [selectedObject, changeObject] = useState('')
-    const [sentences, setSentences] = useState([])
+    const [selectedObject, changeObject] = useState('');
+    const [sentences, setSentences] = useState([]);
+    const [rangeSubject , changeRangeSubject] = useState(5);
 
     let subjectActive, verbActive, objectActive;
 
@@ -60,8 +76,10 @@ const Sunburst2 = ({data}) => {
         (async () => {
             const res = await fetch(`http://localhost:5000/?subject=${selectedSubject}&verb=${selectedVerb}&object=${selectedObject}`)
             const { data } = await res.json()
-            setSentences(data[0].array_agg)
+
+            setSentences(data[0].json_agg)
         })()
+        document.querySelector('body').classList.add('sentences');
     }, [selectedObject])
 
     const renderGraph = (g, i) => {
@@ -118,18 +136,17 @@ const Sunburst2 = ({data}) => {
                         }
 
                         
-                        nodes.forEach(node => node.classList.remove(`${textActive}-active`)) // reset the previous one
+                        nodes.forEach(node => node.classList.remove(`${textActive}-active`)); // reset the previous one
 
                         d3.select(nodes[index]).attr('class' , `${textActive}-active`);
-
                         if(nodes[index].id.includes('subject')){
                             subjectActive = nodes[index].id;
                         }
 
                         // Update text of middle circle
                         const middleText = [subject, verb, object][i];
-                        d3.select('#middle text > tspan:nth-child(1)').text(middleText)
-                        d3.select('#middle text > tspan:nth-child(2)').text(`x${count}`)
+                        d3.select('#middle text > tspan:nth-child(1)').attr('fill', configChart[i].color).text(middleText);
+                        d3.select('#middle text > tspan:nth-child(2)').attr('fill', configChart[i].color).text(`x${count}`)
                     })
                     .on('mouseover', (d, i , nodes) => {
                         const {verb , object} = d.data;
@@ -165,7 +182,7 @@ const Sunburst2 = ({data}) => {
                         endAngle - startAngle > 0.15 ? data[configChart[i].key] : '.'
                     )
 
-        
+
         if(i === 0){
             const circleR = 75;
             g.select('#middle circle')
@@ -195,13 +212,8 @@ const Sunburst2 = ({data}) => {
     //     )
     // }
     return(
-        <div>
-            <ul style={{ position: 'absolute' }}>
-                {sentences.map(sentence =>
-                    <li>{sentence}</li>
-                )}
-                {/* {sentences.sort(() => 0.5 - Math.random())[0]} */}
-            </ul>
+        <section className="graphSvg">
+            <input type="range" min="1" max="10" defaultValue={rangeSubject} onChange={changeRange}/>
             <div className="sunburst">
                 <svg width={600} height={600}>
                     <g>
@@ -225,11 +237,18 @@ const Sunburst2 = ({data}) => {
                             <g />
                             <g />
                         </g>
+                        {/*{annotations}*/}
                     </g>
                 </svg>
             </div>
+            <ul className="sentences">
+                {sentences.map((sentence, i) =>
+                    <li key={i} className={sentence.f2} onClick={clickSentences}>{sentence.f1}</li>
+                )}
+                {/* {sentences.sort(() => 0.5 - Math.random())[0]} */}
+            </ul>
             {/* <Complete/> */}
-        </div>
+        </section>
     )
 }
 

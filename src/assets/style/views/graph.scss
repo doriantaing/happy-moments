@@ -6,4 +6,52 @@
     z-index: -1;
     width: 100vw;
   }
+  .sunburst {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    svg {
+
+      path{
+        &.subject-active{
+          fill: $red;
+        }
+        &.verb-active{
+          fill: $blue;
+        }
+        &.object-active{
+          fill: $purple;
+        }
+      }
+    }
+    .sunburst-desc{
+      fill: $red;
+      font-size: 28px;
+      tspan:last-child{
+        fill: $black;
+        font-size: 20px;
+      }
+    }
+  }
+  .sentences{
+    list-style: none;
+    background: rgba($blue, 0.5);
+    li{
+      display: block;
+      max-width: 100%;
+      font-size: 20px;
+      font-weight: bold;
+      text-transform: uppercase;
+      color: $grey;
+      transition: 0.5s;
+      margin-bottom: 20px;
+      transform: scale(1);
+      transform-origin: left;
+      cursor: pointer;
+      &:hover{
+        color: $black;
+        transform: scale(1.2);
+      }
+    }
+  }
 }
