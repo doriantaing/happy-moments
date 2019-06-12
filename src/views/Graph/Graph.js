@@ -1,6 +1,5 @@
 import React , {Component} from 'react';
 import Sunburst2 from '../../components/Sunburst2';
-import Filters from '../../components/Filters';
 import {Link} from "react-router-dom";
 import {sources} from "../../assets/img";
 
@@ -20,7 +19,6 @@ class Graph extends Component{
                         </div>
                     </div>
                 </div>
-                <Filters/>
                 <Sunburst2 data={this.props.data}/>
                 <img src={sources.gradient4} alt="gradient morph" className="graph-gradient"/>
             </section>
