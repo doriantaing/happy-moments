@@ -16,10 +16,12 @@ const App = () => {
     const fetchData = async() => {
         const res = await fetch('http://localhost:5000/all');
         ({data} = await res.json());
+
         setLoadingPercent(100);
         setTimeout(() => {
             statusLoading(false);
         }, 1500)
+
     }
     fetchData();
   }, [])

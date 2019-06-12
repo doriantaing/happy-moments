@@ -1,7 +1,6 @@
 import React , {useState , useEffect} from 'react';
 import * as d3 from 'd3';
-import {AnnotationCalloutCircle} from 'react-annotation';
-/* import Complete from './Complete.js' */
+import Complete from './Complete.js'
 
 const configChart = [
     {
@@ -30,14 +29,18 @@ const clickSentences = (el) => {
     (async () => {
         const res = await fetch(`http://localhost:5000/sentence=${sentenceId}`);
         const {rows} = await res.json();
-        console.log(rows);
     })()
 };
 
-const changeRange = (input) => {
-    const value = input.currentTarget.value;
-};
+/*let originalData;
 
+const changeRange = () => {
+    let rangeSubject = 5;
+
+    d3.select('.graph-range_subject').on('input', function() {
+
+    });
+}*/
 
 const Sunburst2 = ({data}) => {
     // const [isLoading, statusLoading] = useState(true);
@@ -45,10 +48,8 @@ const Sunburst2 = ({data}) => {
     const [selectedVerb , changeVerb] = useState('');
     const [selectedObject, changeObject] = useState('');
     const [sentences, setSentences] = useState([]);
-    const [rangeSubject , changeRangeSubject] = useState(5);
 
     let subjectActive, verbActive, objectActive;
-
 
     useEffect(() => {
         const g = d3.select("g")
@@ -70,14 +71,69 @@ const Sunburst2 = ({data}) => {
     }, [selectedVerb])
 
     useEffect(() => {
+        const abortController = new AbortController();
+        const signal = abortController.signal;
+
         if (!selectedObject) {
             return setSentences([])
         }
         (async () => {
             const res = await fetch(`http://localhost:5000/?subject=${selectedSubject}&verb=${selectedVerb}&object=${selectedObject}`)
-            const { data } = await res.json()
+            const { data } = await res.json();
+            const allData = [];
+            const maleData = [];
+            const femaleData = [];
+            let test = [];
 
-            setSentences(data[0].json_agg)
+            if(data.length > 1) {
+                data.map((el, i) => {
+                    if (el.json_agg.length > 1) {
+                        if (el.gender === 'm') {
+                            maleData.push(...el.json_agg);
+                        } else if (el.gender === 'f') {
+                            femaleData.push(...el.json_agg)
+                        }
+                        allData.push(...el.json_agg);
+                    }
+                });
+                const total = maleData.length + femaleData.length;
+                const percentMale = Math.round((100 * maleData.length) / total);
+                const percentFemale = Math.round((100 * femaleData.length) / total);
+                test.push(percentMale , percentFemale);
+
+                var arc = d3.arc()
+                    .outerRadius(100 - 10)
+                    .innerRadius(0);
+
+                var labelArc = d3.arc()
+                    .outerRadius(100 - 40)
+                    .innerRadius(100 - 40);
+
+                var pie = d3.pie()
+                    .sort(null)
+                    .value(function(d) { return d; });
+
+                var svg = d3.select(".sentences").append("svg")
+                    .attr("width", 400)
+                    .attr("height", 400)
+                    .append("g")
+                    .attr("transform", "translate(" + 400 / 2 + "," + 400 / 2 + ")");
+
+                var g = svg.selectAll(".arc")
+                    .data(pie(test))
+                    .enter().append("g")
+                    .attr("class", "arc");
+
+                g.append("path")
+                    .attr("d", arc)
+                    .style("fill", (d , i) => d.index === 0 ? 'blue': 'pink');
+
+                g.append("text")
+                    .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
+                    .attr("dy", ".35em")
+                    .text(function(d) { return d.data; });
+            }
+            setSentences(allData)
         })()
         document.querySelector('body').classList.add('sentences');
     }, [selectedObject])
@@ -105,11 +161,17 @@ const Sunburst2 = ({data}) => {
                 }
             }))
 
+        const t = d3.transition().duration(1000);
+
         const paths = groupChart.select("g:nth-child(1)")
                     .selectAll('path')
                     .data(arcData)
-                
-            paths.exit().remove() // remove arc when not needed
+
+
+        paths.exit()
+            .transition(t)
+            .attr('opacity', 0)
+            .remove() // remove arc when not needed
 
             paths.enter()
                 .append("path")
@@ -135,7 +197,7 @@ const Sunburst2 = ({data}) => {
                             changeObject(object)
                         }
 
-                        
+
                         nodes.forEach(node => node.classList.remove(`${textActive}-active`)); // reset the previous one
 
                         d3.select(nodes[index]).attr('class' , `${textActive}-active`);
@@ -163,6 +225,7 @@ const Sunburst2 = ({data}) => {
                          .attr('duration', 5000)
                          .attr('fill', hoverColor)
                     })
+                    .transition(t)
 
         const texts = groupChart.select("g:nth-child(2)")
                     .selectAll("text")
@@ -213,7 +276,9 @@ const Sunburst2 = ({data}) => {
     // }
     return(
         <section className="graphSvg">
-            <input type="range" min="1" max="10" defaultValue={rangeSubject} onChange={changeRange}/>
+{/*
+            <input type="range" min="1" max="10" defaultValue={rangeSubject} className="graph-range_subject"/>
+*/}
             <div className="sunburst">
                 <svg width={600} height={600}>
                     <g>
@@ -237,7 +302,6 @@ const Sunburst2 = ({data}) => {
                             <g />
                             <g />
                         </g>
-                        {/*{annotations}*/}
                     </g>
                 </svg>
             </div>
@@ -247,7 +311,11 @@ const Sunburst2 = ({data}) => {
                 )}
                 {/* {sentences.sort(() => 0.5 - Math.random())[0]} */}
             </ul>
-            {/* <Complete/> */}
+             <Complete
+                 subject={selectedSubject}
+                 verb={selectedVerb}
+                 object={selectedObject}
+             />
         </section>
     )
 }
