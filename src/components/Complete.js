@@ -45,23 +45,24 @@ class Complete extends Component {
 
     render() {
         const error = this.state.error;
-       const {subject , verb , object} = this.props;
+        const {subject , verb , object} = this.props;
+        {console.log(this.props)}
       return (
         <div className="complete">
-            <form onSubmit={this.getDatas.bind(this)} className="complete-form">
+            <form onSubmit={this.renderGraph} className="complete-form">
                 <div className="complete-input">
                     <label>Subject</label>
-                    <input type="text" placeholder="" onChange={this.subjectChange.bind(this)} value={subject}/>
+                    <input type="text" onChange={this.subjectChange.bind(this)} value={subject}/>
                 </div>
                 <div className="complete-input">
                     <label>Verb</label>
-                    <input type="text" placeholder="" onChange={this.verbChange.bind(this)} value={verb}/>
+                    <input type="text" onChange={this.verbChange.bind(this)} value={verb}/>
                 </div>
                 <div className="complete-input">
                     <label>Object</label>
-                    <input type="text" placeholder="" onChange={this.objectChange.bind(this)} value={object}/>
+                    <input type="text" onChange={this.objectChange.bind(this)} value={object}/>
                 </div>
-                <input type="submit" value="Submit" />
+                {/* <input type="submit" value="Submit" /> */}
             </form>
             
             {error ? (

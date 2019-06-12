@@ -1,6 +1,11 @@
-import React , {useState , useEffect} from 'react';
+import React , {useState , useEffect, useRef} from 'react';
 import * as d3 from 'd3';
 import Complete from './Complete.js'
+
+const genders = {
+    m: 'Man',
+    f: 'Woman'
+}
 
 const configChart = [
     {
@@ -32,6 +37,7 @@ const clickSentences = (el) => {
     })()
 };
 
+
 /*let originalData;
 
 const changeRange = () => {
@@ -43,13 +49,26 @@ const changeRange = () => {
 }*/
 
 const Sunburst2 = ({data}) => {
+    const activeIntervalRef = useRef()
+
     // const [isLoading, statusLoading] = useState(true);
     const [selectedSubject , changeSubject] = useState('');
     const [selectedVerb , changeVerb] = useState('');
     const [selectedObject, changeObject] = useState('');
     const [sentences, setSentences] = useState([]);
+    const [sentence, randomSentences] = useState('');
 
     let subjectActive, verbActive, objectActive;
+    const generateRandomSentences = data => {
+        if(data.length > 0){
+            console.log('AZE', data, sentences);
+                var randomPhrase = Math.floor(Math.random() * (data.length - 0 + 1)) + 0;
+                var random = data[randomPhrase]
+                randomSentences(random);
+        }
+
+
+    }
 
     useEffect(() => {
         const g = d3.select("g")
@@ -78,24 +97,26 @@ const Sunburst2 = ({data}) => {
             return setSentences([])
         }
         (async () => {
-            const res = await fetch(`http://localhost:5000/?subject=${selectedSubject}&verb=${selectedVerb}&object=${selectedObject}`)
+            const res = await fetch(`http://localhost:5000/props?subject=${selectedSubject}&verb=${selectedVerb}&object=${selectedObject}`)
             const { data } = await res.json();
             const allData = [];
             const maleData = [];
             const femaleData = [];
             let test = [];
 
-            if(data.length > 1) {
-                data.map((el, i) => {
-                    if (el.json_agg.length > 1) {
-                        if (el.gender === 'm') {
-                            maleData.push(...el.json_agg);
-                        } else if (el.gender === 'f') {
-                            femaleData.push(...el.json_agg)
-                        }
-                        allData.push(...el.json_agg);
-                    }
-                });
+            if(data.length > 1) {            
+                // data.map((el, i) => {
+                //     if (el.json_agg.length > 1) {
+                //         if (el.gender === 'm') {
+                //             maleData.push(...el.json_agg);
+                //         } else if (el.gender === 'f') {
+                //             femaleData.push(...el.json_agg)
+                //         }
+                //         allData.push(...el.json_agg);
+                //     }
+                // });
+                setSentences(data)
+
                 const total = maleData.length + femaleData.length;
                 const percentMale = Math.round((100 * maleData.length) / total);
                 const percentFemale = Math.round((100 * femaleData.length) / total);
@@ -133,10 +154,21 @@ const Sunburst2 = ({data}) => {
                     .attr("dy", ".35em")
                     .text(function(d) { return d.data; });
             }
-            setSentences(allData)
         })()
         document.querySelector('body').classList.add('sentences');
     }, [selectedObject])
+
+    useEffect(() => {
+        if (activeIntervalRef.current) {
+            window.clearInterval(activeIntervalRef.current)
+            activeIntervalRef.current = null
+        }
+
+        generateRandomSentences(sentences);
+        activeIntervalRef.current = setInterval(() => generateRandomSentences(sentences),1000);
+
+        renderGraph(d3.select("g"), 2)
+    }, [sentences])
 
     const renderGraph = (g, i) => {
         if (!data) return
@@ -194,7 +226,17 @@ const Sunburst2 = ({data}) => {
                         }
                         if (i === 2) {
                             textActive = 'object';
-                            changeObject(object)
+                            changeObject(object);
+                            if (object === selectedObject) {
+                                if (activeIntervalRef.current) {
+                                    window.clearInterval(activeIntervalRef.current)
+                                    activeIntervalRef.current = null
+                                } else {
+                                    generateRandomSentences(sentences);
+                                    activeIntervalRef.current = setInterval(() => generateRandomSentences(sentences),1000)
+                                }
+                            }
+                            renderGraph(d3.select("g"), 2)
                         }
 
 
@@ -268,49 +310,82 @@ const Sunburst2 = ({data}) => {
                 .text((d , i , nodes) => `x${d.data.count}`)
         }
     }
-    //
-    // if(isLoading){
-    //     return(
-    //         <h3>Loading ...</h3>
-    //     )
-    // }
+
+
     return(
         <section className="graphSvg">
-{/*
-            <input type="range" min="1" max="10" defaultValue={rangeSubject} className="graph-range_subject"/>
-*/}
-            <div className="sunburst">
-                <svg width={600} height={600}>
-                    <g>
-                        <g id="middle">
-                            <circle/>
-                            <text x="0" y="-20px" className="sunburst-desc">
-                                <tspan x="0" dy="0"></tspan>
-                                <tspan x="0" dy="30px"></tspan>
-                                <tspan x="0" dy="30px">times</tspan>
-                            </text>
+            <div className="graph-svg-inner">
+
+                <div className="sentences">
+                    {sentence.cleaned_hm}
+                </div>
+
+                <div className="sunburst">
+                    <svg width={600} height={600}>
+                        <g>
+                            <g id="middle">
+                                <circle/>
+                                <text x="0" y="-20px" className="sunburst-desc">
+                                    <tspan x="0" dy="0"></tspan>
+                                    <tspan x="0" dy="30px"></tspan>
+                                    <tspan x="0" dy="30px">times</tspan>
+                                </text>
+                            </g>
+                            <g id="subject">
+                                <g />
+                                <g />
+                            </g>
+                            <g id="verb">
+                                <g />
+                                <g />
+                            </g>
+                            <g id="object">
+                                <g />
+                                <g />
+                            </g>
                         </g>
-                        <g id="subject">
-                            <g />
-                            <g />
-                        </g>
-                        <g id="verb">
-                            <g />
-                            <g />
-                        </g>
-                        <g id="object">
-                            <g />
-                            <g />
-                        </g>
-                    </g>
-                </svg>
+                    </svg>
+                </div>
             </div>
-            <ul className="sentences">
-                {sentences.map((sentence, i) =>
-                    <li key={i} className={sentence.f2} onClick={clickSentences}>{sentence.f1}</li>
-                )}
-                {/* {sentences.sort(() => 0.5 - Math.random())[0]} */}
-            </ul>
+
+            <div className="boxes-container boxes-container-1">
+                <div className="box">
+                    <div className="title mb-20">Gender</div>
+                    <div className="image mt-30">
+                        { sentence.gender == "m" ?                      
+                            <img src={process.env.PUBLIC_URL + '/img/male.svg'}/>
+                        :
+                            <img src={process.env.PUBLIC_URL + '/img/female.svg'}/>
+                        }
+                    </div>
+                    <div className="ta-c c-black text-sm mt-10">{genders[sentence.gender]}</div>
+                </div>
+                <div className="box mt-100">
+                    <div className="title mb-20">Country</div>
+                    <div className="image mt-30">
+                        <img src={process.env.PUBLIC_URL + '/img/world.svg'}/>
+                    </div>
+                    <div className="ta-c c-black text-sm mt-10">{sentence.country}</div>
+                </div>
+            </div>
+
+
+            <div className="boxes-container boxes-container-2">
+                <div className="box">
+                    <div className="title mb-20">Age</div>
+                    <div className="ta-c mt-30">
+                    {sentence.age}
+                    </div>
+                    <div className="ta-c c-black text-sm mt-10">yo</div>
+                </div>
+                <div className="box mt-100">
+                    <div className="title mb-20">Married</div>
+                    <div className="image mt-30">
+                        <img src={process.env.PUBLIC_URL + '/img/maried.svg'}/>
+                    </div>
+                    <div className="ta-c c-black text-sm mt-10">{sentence.marital}</div>
+                </div>
+            </div>
              <Complete
                  subject={selectedSubject}
                  verb={selectedVerb}
