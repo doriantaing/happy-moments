@@ -22,11 +22,13 @@ const configChart = [
     },
     {
         innerRadius: 240,
-        outerRadius: 290,
+        outerRadius: 320,
         color: '#A088CF',
         key: 'object'
     },
 ];
+
+const size = configChart[configChart.length -1].outerRadius * 2
 
 const clickSentences = (el) => {
     const sentenceId = el.currentTarget.className;
@@ -72,7 +74,7 @@ const Sunburst2 = ({data}) => {
 
     useEffect(() => {
         const g = d3.select("g")
-            .attr("transform", "translate(" + 600 / 2 + "," + 600 / 2 +")")
+            .attr("transform", "translate(" + size / 2 + "," + size / 2 +")")
         renderGraph(g, 0);
     }, [])
 
@@ -174,6 +176,7 @@ const Sunburst2 = ({data}) => {
         if (!data) return
 
         const groupChart = g.select(`#${configChart[i].key}`);
+        const t = d3.transition().duration(1000);
         const arcGenerator = d3.arc()
             .innerRadius(configChart[i].innerRadius)
             .outerRadius(configChart[i].outerRadius)
@@ -191,18 +194,30 @@ const Sunburst2 = ({data}) => {
                 if (i === 2) {
                     return subject === selectedSubject && verb === selectedVerb
                 }
-            }))
+            }));
 
-        const t = d3.transition().duration(1000);
+        const pathsGroup = groupChart.select("g:nth-child(1)")
 
-        const paths = groupChart.select("g:nth-child(1)")
-                    .selectAll('path')
-                    .data(arcData)
+        pathsGroup.transition(t)
+            .attr('transform', d => `rotate(0)`)
 
+        const paths = pathsGroup
+                .selectAll('path')
+                .data(arcData)
 
         paths.exit()
-            .transition(t)
-            .attr('opacity', 0)
+            // .transition(t)
+            // .attr('opacity', 0)
+            .transition()
+            .duration(1000)
+            // .delay((_, i) => i * 200)
+            .attrTween('d', d => {
+                const interpolate = d3.interpolate(d.endAngle, d.startAngle)
+                return d2 => {
+                    d.endAngle = interpolate(d2)
+                    return arcGenerator(d)
+                }
+            })
             .remove() // remove arc when not needed
 
             paths.enter()
@@ -210,7 +225,6 @@ const Sunburst2 = ({data}) => {
                     .merge(paths)
                     .attr("fill", configChart[i].color)
                     .attr("id", d => configChart[i].key + d.index)
-                    .attr("d", arcGenerator)
                     .on('click', (d, index, nodes) => {
                         const {subject , verb, object , count} = d.data;
                         let textActive;
@@ -251,6 +265,24 @@ const Sunburst2 = ({data}) => {
                         const middleText = [subject, verb, object][i];
                         d3.select('#middle text > tspan:nth-child(1)').attr('fill', configChart[i].color).text(middleText);
                         d3.select('#middle text > tspan:nth-child(2)').attr('fill', configChart[i].color).text(`x${count}`)
+
+                        const pathsGroup = groupChart.select("g:nth-child(1)")
+                        pathsGroup.transition().duration(1000)
+                            .attr('transform', `rotate(${-  d.startAngle * (180 / Math.PI)})`)
+                        
+                        const textsGroup = groupChart.select("g:nth-child(2)");
+                        const textsItems = groupChart.selectAll("g:nth-child(2) > text");
+
+                        textsGroup.transition().duration(1000)
+                            .attr('transform', () => {
+                                return `rotate(${-d.startAngle * (180 / Math.PI)})`;
+                            });
+                        
+                        textsItems.transition().duration(1000)
+                           .attr('transform', function(l) {
+                               const [ x, y ] = arcGenerator.centroid(l);
+                               return `translate(${x},${y}) rotate(${d.startAngle * (180 / Math.PI)})`
+                           })
                     })
                     .on('mouseover', (d, i , nodes) => {
                         const {verb , object} = d.data;
@@ -267,9 +299,24 @@ const Sunburst2 = ({data}) => {
                          .attr('duration', 5000)
                          .attr('fill', hoverColor)
                     })
-                    .transition(t)
+                    .transition()
+                    .duration(1000)
+                    // .delay((_, i) => i * 200)
+                    .attrTween('d', d => {
+                        const interpolate = d3.interpolate(d.startAngle, d.endAngle)
+                        return d2 => {
+                            d.endAngle = interpolate(d2)
+                            return arcGenerator(d)
+                        }
+                    })
+                    // .attr("d", arcGenerator)
 
-        const texts = groupChart.select("g:nth-child(2)")
+        const textsGroup = groupChart.select("g:nth-child(2)")
+        textsGroup
+            .transition(t)
+            .attr('transform', d => `rotate(0)`)
+
+        const texts = textsGroup
                     .selectAll("text")
                     .data(arcData)
 
@@ -285,7 +332,7 @@ const Sunburst2 = ({data}) => {
                     .attr('pointer-events', 'none')
                     .text(({ startAngle, endAngle, data}) =>
                         endAngle - startAngle > 0.15 ? data[configChart[i].key] : '.'
-                    )
+                    );
 
 
         if(i === 0){
@@ -321,7 +368,7 @@ const Sunburst2 = ({data}) => {
                 </div>
 
                 <div className="sunburst">
-                    <svg width={600} height={600}>
+                    <svg width={size} height={size}>
                         <g>
                             <g id="middle">
                                 <circle/>
@@ -343,6 +390,7 @@ const Sunburst2 = ({data}) => {
                                 <g />
                                 <g />
                             </g>
+
                         </g>
                     </svg>
                 </div>
