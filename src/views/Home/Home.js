@@ -8,13 +8,16 @@ class Home extends Component {
     icons: [ 'icon-sofa','icon-popcorn','icon-octopus','icon-cat','icon-popcorn','icon-donut','icon-chocolate'],
   };
 
-  render() {
+    render() {
     const {icons} = this.state;
     return (
         <div className="Home">
             <div className="container">
-                <div className="row text-container">
-                    <div className="col-md-9">
+                <div className="row text-container jc-center">
+                    <div className="col-md-10">
+                        <Link to="/" className="main-logo home">
+                            <img src={sources.logo} alt="logo"/>
+                        </Link>
                         <div className="text-xl mb-40">Welcome to happy feel</div>
                         <div className="text-md mb-20">Don't worry, be happy</div>
                         <div className="home-desc mb-50">Through the different studies we have found around what makes people happy. We found today why people are happy in the last 24 hours. Through more than 116,000 testimonials, you may find the little secrets of people to be happy ?</div>
@@ -36,7 +39,6 @@ class Home extends Component {
                 <img src={sources.gradient2} id="__id__" className="home-gradient" alt=""/>
                 <img src={sources.gradientImg} id="__id__" className="home-gradient" alt=""/>
             </div>
-
 
             {/*
             |

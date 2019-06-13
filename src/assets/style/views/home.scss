@@ -6,7 +6,8 @@
         position: relative;
         z-index: 1;
         div{
-            margin: auto 0;
+           margin-top: auto;
+            margin-bottom: auto;
         }
     }
 
@@ -22,42 +23,43 @@
         top: 0;
         right: 0;
     }
-    
-    .home-icon{
-        font-size: 40px;
-        z-index: -1;
-        &.icon-1{
-            top: 5%;
-            left: 4%;
-            transform: rotate(20deg);
-        }
-        &.icon-2{
-            top: 20%;
-            left: 35%;
-            transform: rotate(-5deg);
-        }
-        &.icon-3{
-            top: 40%;
-            left: 55%;
-            transform: rotate(30deg);
-        }
-        &.icon-4{
-            bottom: 5%;
-            left: 3%;
-            transform: rotate(30deg);
-        }
-        &.icon-5{
-            bottom: 20%;
-            left: 35%;
-            transform: rotate(-10deg);
-        }
-        &.icon-6{
-            right: 30%;
-            bottom: 10%;
-        }
-        &.icon-7{
-            right: 10%;
-            bottom: 15%;
-        }
+}
+
+
+.home-icon{
+    font-size: 40px;
+    z-index: -1;
+    &.icon-1{
+        top: 5%;
+        left: 4%;
+        transform: rotate(20deg);
+    }
+    &.icon-2{
+        top: 20%;
+        left: 35%;
+        transform: rotate(-5deg);
+    }
+    &.icon-3{
+        top: 40%;
+        left: 55%;
+        transform: rotate(30deg);
+    }
+    &.icon-4{
+        bottom: 5%;
+        left: 3%;
+        transform: rotate(30deg);
+    }
+    &.icon-5{
+        bottom: 20%;
+        left: 35%;
+        transform: rotate(-10deg);
+    }
+    &.icon-6{
+        right: 30%;
+        bottom: 10%;
+    }
+    &.icon-7{
+        right: 10%;
+        bottom: 15%;
     }
 }

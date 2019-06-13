@@ -9,3 +9,12 @@
     font-weight: normal;
     font-style: normal;
 }
+
+@font-face {
+  font-family: 'futura-condensed';
+  src: url('../fonts/futura_medium_condensed-bt.ttf') format('truetype'),
+       url('../fonts/futura_medium_condensed-bt.woff') format('woff'),
+       url('../fonts/futura_medium_condensed-bt.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
