@@ -31,6 +31,8 @@ body{
 .main-logo{
   display: inline-block;
   margin-top: 60px;
+  position: relative;
+  z-index: 1;
   &.home{
     position: static;
     margin-top: 0;
