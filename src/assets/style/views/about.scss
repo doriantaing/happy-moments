@@ -13,19 +13,17 @@
         }
         .box{
             position: relative;
+            top: 0;
             height: 250px;
             background: white;
             border-radius: 4px;
             box-shadow: 0 11px 57px 0 rgba(0, 0, 0, 0.09);
             padding: 20px;
             overflow: hidden;
-        }
-        .col-md-4{
-            &:nth-child(odd){
-                margin-top: 20px;
+            transition: top 0.5s;
+            &:hover{
+                top: -20px;
             }
-        }
-        .box{
             &:after{
                 content: "";
                 width: 100%;

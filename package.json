@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "d3": "^5.9.2",
+    "lottie-web": "^5.5.5",
     "node-sass": "^4.12.0",
     "react": "^16.8.6",
     "react-annotation": "^2.1.6",

@@ -11,6 +11,8 @@
     color: $red;
     font-size: 20px;
     letter-spacing: 1.5px;
+    margin-top: 40px;
+    font-family: 'futura-condensed' , 'Arial' , sans-serif;
     h3{
       margin: 0;
     }
@@ -27,7 +29,7 @@
       border-radius: 20px;
       width: 0;
       height: 20px;
-      background: $red;
+      background: $black;
       transition: 1.5s;
     }
   }
