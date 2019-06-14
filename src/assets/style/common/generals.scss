@@ -89,6 +89,7 @@ body{
     margin-right: 10px;
     display: flex;
     align-items: center;
+    flex-direction: column;
     label{
       display: block;
     }
@@ -100,7 +101,7 @@ body{
       background: transparent;
       text-transform: uppercase;
       font-size: 20px;
-      width: 100px;
+      width: auto;
       text-align: center;
 
     }
