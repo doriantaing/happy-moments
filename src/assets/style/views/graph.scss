@@ -1,7 +1,7 @@
 .graph{
   height: 100vh;
   .graph-gradient{
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     z-index: -1;
@@ -24,7 +24,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 150px;
+    margin-top: 200px;
     font-size: 12px;
     text-anchor: middle;
     svg {
@@ -58,7 +58,7 @@
     display: flex;
     text-align: center;
     width: 600px;
-    margin: auto;
+    margin: 70px auto 0;
     align-items: center;
     justify-content: center;
     //text-transform: uppercase;
@@ -74,6 +74,9 @@
 
 .sentence-boxes{
   animation: fadeIn 1s forwards;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 @keyframes fadeIn{

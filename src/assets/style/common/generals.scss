@@ -77,11 +77,13 @@ body{
 
 .complete{
   position: absolute;
-  bottom: 0;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
   &-form{
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
   }
   &-input{
     margin-right: 10px;

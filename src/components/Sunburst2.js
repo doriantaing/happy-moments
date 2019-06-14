@@ -383,12 +383,12 @@ const Sunburst2 = ({data}) => {
 
     return(
         <section className="graphSvg">
+            <Complete
+                subject={selectedSubject}
+                verb={selectedVerb}
+                object={selectedObject}
+            />
             <div className="graph-svg-inner">
-                <Complete
-                    subject={selectedSubject}
-                    verb={selectedVerb}
-                    object={selectedObject}
-                />
                 <div className="sentences">
                     {sentence &&
                     <p>{sentence.cleaned_hm}</p>
@@ -424,45 +424,49 @@ const Sunburst2 = ({data}) => {
             </div>
 
             {sentence &&
-             <div className="sentence-boxes">
-                <div className="boxes-container boxes-container-1">
-                    <div className="box">
-                        <div className="title mb-20">Gender</div>
-                        <div className="image mt-30">
-                            { sentence.gender == "m" ?
-                                <img src={process.env.PUBLIC_URL + '/img/male.svg'}/>
-                            :
-                                <img src={process.env.PUBLIC_URL + '/img/female.svg'}/>
-                            }
+             <div className="row jc-center">
+                 <div className="col-md-10">
+                     <div className="sentence-boxes">
+                        <div className="boxes-container boxes-container-1">
+                            <div className="box">
+                                <div className="title mb-20">Gender</div>
+                                <div className="image mt-30">
+                                    { sentence.gender == "m" ?
+                                        <img src={process.env.PUBLIC_URL + '/img/male.svg'}/>
+                                    :
+                                        <img src={process.env.PUBLIC_URL + '/img/female.svg'}/>
+                                    }
+                                </div>
+                                <div className="ta-c c-black text-sm mt-10">{genders[sentence.gender]}</div>
+                            </div>
+                            <div className="box mt-100">
+                                <div className="title mb-20">Country</div>
+                                <div className="image mt-30">
+                                    <img src={process.env.PUBLIC_URL + '/img/world.svg'}/>
+                                </div>
+                                <div className="ta-c c-black text-sm mt-10">{sentence.country}</div>
+                            </div>
                         </div>
-                        <div className="ta-c c-black text-sm mt-10">{genders[sentence.gender]}</div>
-                    </div>
-                    <div className="box mt-100">
-                        <div className="title mb-20">Country</div>
-                        <div className="image mt-30">
-                            <img src={process.env.PUBLIC_URL + '/img/world.svg'}/>
-                        </div>
-                        <div className="ta-c c-black text-sm mt-10">{sentence.country}</div>
-                    </div>
-                </div>
 
 
-                <div className="boxes-container boxes-container-2">
-                    <div className="box">
-                        <div className="title mb-20">Age</div>
-                        <div className="ta-c mt-30">
-                        {sentence.age}
+                        <div className="boxes-container boxes-container-2">
+                            <div className="box">
+                                <div className="title mb-20">Age</div>
+                                <div className="ta-c mt-30">
+                                {sentence.age}
+                                </div>
+                                <div className="ta-c c-black text-sm mt-10">years old</div>
+                            </div>
+                            <div className="box mt-100">
+                                <div className="title mb-20">Married</div>
+                                <div className="image mt-30">
+                                    <img src={process.env.PUBLIC_URL + '/img/maried.svg'}/>
+                                </div>
+                                <div className="ta-c c-black text-sm mt-10">{sentence.marital}</div>
+                            </div>
                         </div>
-                        <div className="ta-c c-black text-sm mt-10">years old</div>
-                    </div>
-                    <div className="box mt-100">
-                        <div className="title mb-20">Married</div>
-                        <div className="image mt-30">
-                            <img src={process.env.PUBLIC_URL + '/img/maried.svg'}/>
-                        </div>
-                        <div className="ta-c c-black text-sm mt-10">{sentence.marital}</div>
-                    </div>
-                </div>
+                     </div>
+                 </div>
              </div>
             }
         </section>
