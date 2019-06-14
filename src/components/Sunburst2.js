@@ -384,7 +384,11 @@ const Sunburst2 = ({data}) => {
     return(
         <section className="graphSvg">
             <div className="graph-svg-inner">
-
+                <Complete
+                    subject={selectedSubject}
+                    verb={selectedVerb}
+                    object={selectedObject}
+                />
                 <div className="sentences">
                     {sentence &&
                     <p>{sentence.cleaned_hm}</p>
@@ -461,13 +465,6 @@ const Sunburst2 = ({data}) => {
                 </div>
              </div>
             }
-
-
-             <Complete
-                 subject={selectedSubject}
-                 verb={selectedVerb}
-                 object={selectedObject}
-             />
         </section>
     )
 }
